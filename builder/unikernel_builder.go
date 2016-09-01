@@ -71,6 +71,13 @@ func BuildUnikernel(sourcesDir, host string) error {
 	if err != nil {
 		return errors.New("could not get app name", err)
 	}
+
+	image, err := client.UnikClient(host).Images().Get(imageName)
+	if err == nil {
+		logrus.Info("using cached image", image)
+		return nil
+	}
+
 	runArgs := os.Getenv("ARGS")
 	logrus.WithFields(logrus.Fields{
 		"sourcesDir": sourcesDir,
